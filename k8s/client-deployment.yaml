@@ -1,0 +1,23 @@
+apiVersion: apps/v1 # selecting the api version we want to use, we want to us an object defined as v1 in app
+kind: Deployment # specify the kind of object we want to use in this deployment,we are making an object type of "Deployment"
+metadata:
+  name: client-deployment #names the object that will be created by this config file  
+spec: # going to configure this deployment
+  replicas: 3 #specfiing the number of different pods this deployment is to make
+  selector:  #gives us a handle on the label inside the template
+    matchLabels:
+      component: web # what it will be managing
+  template: #Below we are listing the config that will be used for every pod created by this deployment
+      metadat:
+        labels:
+          component: web
+      spec: ## below listing every Pod controlled by this deployment
+        containers:
+          -name: client
+          image: unusualcaspento/multi-client
+          resources:
+            limits:
+              memory: "128mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 3000 # this will be the port that is mapped up to the "multi-client" image

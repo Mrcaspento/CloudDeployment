@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector: ## going to properly select our client-deployment
+    component: web ##If vscode auto fills this template remember to change the "app" to "componenet" they just need to match with the cliend-pod
+  ports:
+  - port: 3000
+    targetPort: 3000 # IN A CLUSTERIP WE ONLY HAVE A TARGETPORT and a PORT
+    #IN A CLUSTERIP THERE IS NO NODEPORT the port I use to test out the container in the pod on my browser 
