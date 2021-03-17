@@ -268,6 +268,24 @@ spec:
       targetPort: 5432
 ```
 
+11. create a file called `database-persistent-volume-claim.yaml` you this template below
+
+```yaml
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: database-persistent-volume-claim
+spec:
+  resources:
+    requests:
+      storage: 2Gi
+  accessModes:
+    - ReadWriteOnce
+```
+
+- AccessModes ^^
+  - `ReadWriteOnce` can be used by a single node
+
 ## when ready to check
 
 - run `kubectl apply -f k8s`
@@ -298,6 +316,8 @@ spec:
 - we dont want this for data that neeeds to last
   - Volume(not exactly the same thing as a Docker Volume)
 ```
+
+THe differences between a Persistant
 
 - ## LoadBalancer:
 - ## Ingress:
