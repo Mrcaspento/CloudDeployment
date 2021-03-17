@@ -62,29 +62,25 @@ A Step by step guide on setting up a simple program and deploying to a Kubernete
 2. create a `client-deployment.yaml` file use this template as a guide
 
 ```yaml
-apiVersion:
-kind:
+apiVersion: apps/v1 # selecting the api version we want to use, we want to us an object defined as v1 in app
+kind: Deployment # specify the kind of object we want to use in this deployment,we are making an object type of "Deployment"
 metadata:
-  name:
-spec:
-  replicas:
-  selector:
+  name: client-deployment #names the object that will be created by this config file
+spec: # going to configure this deployment
+  replicas: 3 #specfiing the number of different pods this deployment is to make
+  selector: #gives us a handle on the label inside the template
     matchLabels:
-      component:
-  template:
+      component: web # what it will be managing
+  template: #Below we are listing the config that will be used for every pod created by this deployment
     metadata:
       labels:
-        component:
-    spec:
+        component: web
+    spec: ## below listing every Pod controlled by this deployment
       containers:
-        - name:
-          image:
-          resources: # this is need to prevent a resource limit error
-            limits:
-              memory:
-              cpu:
+        - name: client
+          image: unusualcaspento/multi-client
           ports:
-            - containerPort:
+            - containerPort: 3000 # this will be the port that is mapped up to the "multi-client" image
 ```
 
 3. create a `client-cluster-ip-service.yaml` file use this template
@@ -348,4 +344,14 @@ THe differences between a Persistant
   - the `'key=value'` is Key-value pair of the secret information
     you can check your secrets with `kubectl get secrets`
 - ## LoadBalancer:
+  - Legacy way of getting network traffic into a cluster
 - ## Ingress:
+  - Exposes a set of services to the outside world
+  - its better then a loadbalancer
+    allows outside users to access all the different pods that are running containers that they need
+  - using a nginx ingress
+  - use ingress-nginx here is the [github](https://github.com/kubernetes/ingress-nginx) use this one!!
+    not kubernetes-ingress the [github](https://github.com/nginxinc/kubernetes-ingress)
+    - is a seperate project that does the same thing led by the company
+      the setup of ingress-nginx changes depending on you environment(local, GC, AWS, Azure)
+      googlecloud is
