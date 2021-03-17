@@ -41,7 +41,7 @@ A Step by step guide on setting up a simple program and deploying to a Kubernete
 
 ---
 
-# Build the application
+# Build the application with IBMCloud
 
 1. Ensure your local Docker engine is started
 
@@ -147,7 +147,121 @@ spec:
 - you can check the statuses of the pods, deployments, services with `kubectl get <ObjectType>`
 - then you can check the status of the object type with `kubectl logs <objectName>`
 
-# to organize all your files you can put into one config file!!
+6. Create a file called `worker-deployment.yaml` You can you this template
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker-deployment
+spec:
+  replicas: 1 #this needs to be scaled
+  selector:
+    matchLabels:
+      component: worker
+  template:
+    metadata:
+      labels:
+        component: worker
+    spec:
+      containers:
+        - name: worker
+          image: unusualcaspento/multi-worker # replace this with your own <dockerId>/<ImageName>
+```
+
+- after that make sure you add it by running `kubectl apply -f <folderName>`
+
+7. create a file called `redis-deployment.yaml` use the template below
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+spec:
+  replicas: 1 # we only want to have one version of it
+  selector:
+    matchLabels:
+      component: redis
+  template:
+    metadata:
+      labels:
+        component: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 6379 # default port of redis
+```
+
+8. create a file called `redis-cluster-ip-service.yaml` use the template below
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: redis
+  ports:
+    - port: 6379
+      targetPort: 6379
+      #no need to change the  target port unless its like a nginx server thats supposed redirect to server web traffic on port 80
+```
+
+- run `kubectl apply -f <FolderName>` again "<folderName>' is just used to apply all the files in the folder path
+- later on we might want to use a different method by decribing the exact file path instead
+
+9. create a file called `postgres-deployment.yaml` use the template below
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      component: postgres
+  template:
+    metadata:
+      labels:
+        component: postgres
+    spec:
+      containers:
+        - name: postgres
+          image: postgres
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 5432
+```
+
+10. create a file called `postgres-cluster-ip-service.yaml` use the template below
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+```
 
 ## when ready to check
 

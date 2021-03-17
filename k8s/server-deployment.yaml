@@ -16,5 +16,8 @@ spec:
       - name: server
         image: unusualcaspento/multi-server
         resources:
+          limits:
+              memory: "128Mi"
+              cpu: "500m"
         ports:
         - containerPort: 5000
