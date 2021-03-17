@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: server # indicates that this will be the server
+  template:
+    metadata:
+      labels:
+        component: server # remember it has to match
+    spec:
+      containers:
+      - name: server
+        image: unusualcaspento/multi-server
+        ports:
+        - containerPort: 5000
+--- # using the --- is how you divide it
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: server
+  ports:
+  - port: 5000
+    targetPort: 5000

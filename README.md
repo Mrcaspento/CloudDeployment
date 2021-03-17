@@ -59,7 +59,7 @@ A Step by step guide on setting up a simple program and deploying to a Kubernete
 
 1. start by creating a K8s folder
 
-2. create a client-deployment.yaml file use this template as a guide
+2. create a `client-deployment.yaml` file use this template as a guide
 
 ```yaml
 apiVersion:
@@ -79,15 +79,71 @@ spec:
       containers:
         - name:
           image:
+          resources: # this is need to prevent a resource limit error
+            limits:
+              memory:
+              cpu:
           ports:
             - containerPort:
 ```
 
-3. create a client-cluster-ip-service.yaml file use this template
+3. create a `client-cluster-ip-service.yaml` file use this template
 
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: web
+  ports:
+    - port: 3000
+      targetPort: 3000
 ```
 
+4. create a `server-deployment.yaml` for Express API Deployment Config use this template
+
+```yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: server-deployment
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      component: server # indicates that this will be the server
+  template:
+    metadata:
+      labels:
+        component: server # remember it has to match
+    spec:
+      containers:
+        - name: server
+          image: unusualcaspento/multi-server
+          ports:
+            - containerPort: 5000
 ```
+
+5. Create a file called `server-cluster-ip-service.yaml` a Cluster IP for the Express API use this template
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: server-cluster-ip-service
+spec:
+  type: ClusterIP
+  selector:
+    component: server
+  ports:
+    - port: 5000
+      targetPort: 5000
+```
+
+# to organize all your files you can put into one config file!!
 
 ## when ready to check
 
