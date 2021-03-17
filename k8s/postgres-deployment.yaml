@@ -19,6 +19,12 @@ spec:
       containers:
       - name: postgres
         image: postgres
+        env:
+          - name: POSTGRESS_PASSWORD # defaultname from postgress
+            valueFrom:
+              secretKeyRef:
+                key: PGPASSWORD
+                name: pgpassword
         resources:
           limits:
             memory: "2Gi"

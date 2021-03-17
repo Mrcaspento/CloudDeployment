@@ -334,5 +334,18 @@ spec:
 
 THe differences between a Persistant
 
+- ## Secrets
+  - Securely stores a piece of information in the cluster , such as a database password
+
+## Creating a Secret
+
+- run the command `kubectl create secret generic <secret_name> --from-literal key=value`
+  - the `'create'` is an imperative command to create a new object
+  - the `'secret'` is the Type of object we are going to create
+  - the `'generic'` is the type of secret
+  - the `'<secret_name>'` Name of secret, for later reference in a pod config
+  - the `'--from-literal'` means we are going to add the secret information into this command, as opposed to from . file
+  - the `'key=value'` is Key-value pair of the secret information
+    you can check your secrets with `kubectl get secrets`
 - ## LoadBalancer:
 - ## Ingress:
