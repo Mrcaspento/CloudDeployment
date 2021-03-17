@@ -247,6 +247,11 @@ spec:
             - containerPort: 5432
 ```
 
+- ## The PostGres Deployment
+- inside of the deployment is a pod
+- inside the pod is a postgres container
+  - inside the postgres container is a File system for Container
+
 10. create a file called `postgres-cluster-ip-service.yaml` use the template below
 
 ```yaml
