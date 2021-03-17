@@ -15,5 +15,6 @@ spec:
       containers:
       - name: server
         image: unusualcaspento/multi-server
+        resources:
         ports:
         - containerPort: 5000

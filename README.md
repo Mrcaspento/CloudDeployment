@@ -143,6 +143,10 @@ spec:
       targetPort: 5000
 ```
 
+- make sure you have an image built or this wont work when kubernetes trys to pull the image
+- you can check the statuses of the pods, deployments, services with `kubectl get <ObjectType>`
+- then you can check the status of the object type with `kubectl logs <objectName>`
+
 # to organize all your files you can put into one config file!!
 
 ## when ready to check
