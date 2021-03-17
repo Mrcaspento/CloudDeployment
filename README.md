@@ -282,6 +282,22 @@ spec:
 - ClusterIP:
   - Exposes a set of pods to other objects in the cluster
 - NodePort:
+
   - Exposes a set of pods to the outside world( only good for dev purposes!!)
+
+- ## Volume
+- "volume" in generic container terminology
+  - Some type of mechanism that allows a container to access a filesysytem outside itself
+- "volume" in KUBERNETES
+  - an Object that allows a container to store data at the pod level
+
+```md
+- we want these
+  - Persistant Volume Claim
+  - Persistant Volume
+- we dont want this for data that neeeds to last
+  - Volume(not exactly the same thing as a Docker Volume)
+```
+
 - ## LoadBalancer:
 - ## Ingress:

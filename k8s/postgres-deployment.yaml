@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: postgres-deployment
 spec:
-  replicas: 1
+  replicas: 1 # you cant have more then 2 because having two different DB's access the same filesytem without them knowing they have their hands inside the same volume or it will break
   selector:
     matchLabels:
       component: postgres
