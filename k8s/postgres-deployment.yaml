@@ -12,12 +12,20 @@ spec:
       labels:
         component: postgres
     spec:
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: database-persistent-volume-claim
       containers:
       - name: postgres
         image: postgres
         resources:
           limits:
-            memory: "128Mi"
+            memory: "2Gi"
             cpu: "500m"
         ports:
         - containerPort: 5432
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgres-storage
+          subPath: postgres # overwrites the default  and saves the data into a file  called postgres

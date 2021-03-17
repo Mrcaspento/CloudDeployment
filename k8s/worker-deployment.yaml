@@ -15,3 +15,12 @@ spec:
       containers:
       - name: worker
         image: unusualcaspento/multi-worker
+        resources:
+          limits:
+            memory: 2Gi
+            cpu: "500m"
+        env: #short for envionmental variables
+          - name: REDIS_HOST
+            value: redis-cluster-ip-service #name of the clusterip serives that redis needs to connect to
+          - name: REDIS_PORT
+            value: '6379'

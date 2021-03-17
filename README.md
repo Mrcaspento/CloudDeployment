@@ -227,7 +227,7 @@ kind: Deployment
 metadata:
   name: postgres-deployment
 spec:
-  replicas: 1
+  replicas: 1 # you cant have more then 2 because having two different DB's access the same filesytem without them knowing they have their hands inside the same volume or it will break
   selector:
     matchLabels:
       component: postgres
@@ -236,17 +236,27 @@ spec:
       labels:
         component: postgres
     spec:
+      volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: database-persistent-volume-claim
       containers:
         - name: postgres
           image: postgres
           resources:
             limits:
-              memory: "128Mi"
+              memory: "2Gi"
               cpu: "500m"
           ports:
             - containerPort: 5432
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgres-storage
+              subPath: postgres # overwrites the default  and saves the data into a file  called postgres
 ```
 
+- run `kubectl get pv` to get the persistent Volume that are created
+- run `kubectl get pvc` to get all the persistent Volume claims created \*\* think of it as an advertisement
 - ## The PostGres Deployment
 - inside of the deployment is a pod
 - inside the pod is a postgres container
@@ -285,6 +295,11 @@ spec:
 
 - AccessModes ^^
   - `ReadWriteOnce` can be used by a single node
+  - `ReadOnlyMany` Mutliple nodes can read from this
+  - `ReadWriteMany` Can be read and written to by many nodes
+
+12. run the command `kubectl get storageclass`
+13. Add Environmental Variables to Config
 
 ## when ready to check
 
