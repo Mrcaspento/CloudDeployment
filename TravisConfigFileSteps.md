@@ -41,8 +41,12 @@
 
 1. Run `docker run -it -v $(pwd):/app ruby:2.4 sh`
 2. after docker pulls the image run `gem install travis`
-3. run `travis login --github-token <YOUR_Personal_Token> --com`
+3. run `travis login --github-token <YOUR_Personal_Token> --pro`
 4. after loggin in you must pass the same --com or --pro flag you used to login
 5. we
-6. run `travis encrypt-file service-account.json -r username/repo --com`
+6. run `travis encrypt-file service-account.json -r username/repo --pro`
 7. delete the service-account.json file after you encrypt it
+8. make sure the values are added to the travis build on the travis-ci.com
+9. note if error still occurs try not adding the encrypeted file directly to the repo and have travis print out the key infos
+10. create a DOCKER_PASSWORD var in the travis-ci.com repo
+11. create a DOCKER_USERNAME var in the travis-ci.com

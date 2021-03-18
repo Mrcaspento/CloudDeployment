@@ -334,7 +334,102 @@ spec:
               servicePort: 5000
 ```
 
-16. create a `.travis.yml` in the root of the directory
+16. create a `.travis.yml` in the root of the directory use the template below
+
+```yaml
+services:
+  - docker
+before_install:
+  - openssl aes-256-cbc -K $<EncryptedKey> -iv $<EncryptedIv> -in super_secret.txt.enc -out super_secret.txt -d
+  - curl https://sdk.cloud.google.com | bash > /dev/null; # the curll will download from the cloud then pass it to bash to install
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file service-account.json # actiavtes a service account then provide a set of credentials that will be placed into the service-account.json
+  - gcloud config set project centered-motif-308015 # project id not the name
+  - gcloud config set compute/zone us-east4-b # setting the google cloud zone
+  - gcloud container clusters get-credentials multi-cluster
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t unusualCaspento/react-test -f ./client/Dockerfile.dev ./client
+script:
+  - docker run -e CI=true unusualCaspento/react-test npm test #how start the test
+
+  #kubernetes doesnt have a provider so we make one from scratch
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: main
+```
+
+17. create a `deploy.sh` in the root of the directory use the template below
+
+```sh
+docker build -t unusualcaspento/multi-client:latest -t unusualcaspento/multi-client:$SHA -f ./client/Dockerfile ./client
+docker build -t unusualcaspento/multi-server -f ./server/Dockerfile ./server
+docker build -t unusualcaspento/multi-worker -f ./worker/Dockerfile ./worker
+#push the images
+docker push unusualcaspento/multi-client:latest
+docker push unusualcaspento/multi-server:latest
+docker push unusualcaspento/multi-worker:latest
+
+docker push unusualcaspento/multi-client:$SHA
+docker push unusualcaspento/multi-server:$SHA
+docker push unusualcaspento/multi-worker:$SHA
+# and now apply all the config files
+kubectl apply -f k8s
+#set an image forcibly or imperatively
+kubectl set image deployments/server-deployment server=unusualcaspento/multi-server:$SHA #I can use a $GIT_SHA if i didnt tag the image with latest
+kubectl set image deployments/client-deployment client=unusualcaspento/multi-client:$SHA
+kubectl set image deployments/worker-deployment worker=unusualcaspento/multi-worker:$SHA
+```
+
+18. Configuring GCloud CLI on Cloud Console
+
+- manually creating a secret for the gCloud
+- run the command ` kubectl create secret generic <secret_name> --from-literal PGPASSWORD=<passwordYouChoose>`
+- or go to cloud shell and run
+  - `gcloud config set project <projectId>`
+  - `glcoud config set compute/zone <YourZoneId>`
+  - `gcloud container clusters get-credentials`
+    Now we can use kubectl in the googleCloud Shell
+    then run ` kubectl create secret generic <secret_name> --from-literal PGPASSWORD=<passwordYouChoose>`
+    - the secertname is pgpassword
+    - refresh the page and check the Configuration it should be there on the page
+
+19. Install Helm v3 on the Google CLI
+
+- run the following
+
+```
+curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3
+chmod 700 get_helm.sh
+./get_helm.sh
+```
+
+click [here](https://helm.sh/docs/intro/install/#from-script) for docs
+
+---
+
+20. Install Ingress-Nginx
+
+```helm
+
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm install my-release ingress-nginx/ingress-nginx
+
+```
+
+if you get an error such as chart requries kubeVersion: >=1.16.0-0
+
+- run the command in the google cli
+  - `glcoud container clusters upgrade <YourClusterName> --main --cluster-version 1.16`
+    here are links to some docs
+    [google](https://cloud.google.com/kubernetes-engine/docs/how-to/upgrading-a-cluster)
+    [kubernetes](https://kubernetes.github.io/ingress-nginx/deploy/#using-helm)
+
+21. You can watch the status
+    -by running `kubectl --namespace default get services -o wide -w my-release-ingress-nginx-controller`
+22. Role Based Access Control (RBAC)
 
 ## when ready to check
 

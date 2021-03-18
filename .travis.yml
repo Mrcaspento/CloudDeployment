@@ -1,11 +1,27 @@
 language: ruby
 services:
   - docker
+env:
+  global:
+    - SHA=$(git rev-parse HEAD)
+    - CLOUDSDK_CORE_DISABLE_PROMPTS=1
 before_install:
-  - openssl aes-256-cbc -K <EncryptedKey> -iv <EncryptedIv> -in super_secret.txt.enc -out super_secret.txt -d
+  - openssl aes-256-cbc -K $<EncryptedKey> -iv $<EncryptedIv> -in super_secret.txt.enc -out super_secret.txt -d
   - curl https://sdk.cloud.google.com | bash > /dev/null; # the curll will download from the cloud then pass it to bash to install
   - source $HOME/google-cloud-sdk/path.bash.inc
   - gcloud components update kubectl
   - gcloud auth activate-service-account --key-file service-account.json # actiavtes a service account then provide a set of credentials that will be placed into the service-account.json
+  - gcloud config set project centered-motif-308015 # project id not the name
+  - gcloud config set compute/zone us-east4-b # setting the google cloud zone
+  - gcloud container clusters get-credentials multi-cluster
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker build -t unusualCaspento/react-test -f ./client/Dockerfile.dev ./client
 script:
-  - docker run -e CI=true unusualCaspento/react-test npm test
+  - docker run -e CI=true unusualCaspento/react-test npm test #how start the test
+
+  #kubernetes doesnt have a provider so we make one from scratch
+deploy:
+  provider: script
+  script: bash ./deploy.sh
+  on:
+    branch: main
