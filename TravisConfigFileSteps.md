@@ -45,3 +45,4 @@
 4. after loggin in you must pass the same --com or --pro flag you used to login
 5. we
 6. run `travis encrypt-file service-account.json -r username/repo --com`
+7. delete the service-account.json file after you encrypt it
