@@ -20,7 +20,7 @@ spec:
       - name: postgres
         image: postgres
         env:
-          - name: POSTGRESS_PASSWORD # defaultname from postgress
+          - name: POSTGRES_PASSWORD # defaultname from postgres
             valueFrom:
               secretKeyRef:
                 key: PGPASSWORD

@@ -1,0 +1,7 @@
+services:
+  - docker
+before_install:
+  - curl https://sdk.cloud.google.com | bash > /dev/null; # the curll will download from the cloud then pass it to bash to install
+  - source $HOME/google-cloud-sdk/path.bash.inc
+  - gcloud components update kubectl
+  - gcloud auth activate-service-account --key-file service-account.json # actiavtes a service account then provide a set of credentials that will be placed into the service-account.json

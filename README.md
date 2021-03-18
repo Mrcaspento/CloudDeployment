@@ -2,6 +2,10 @@
 
 A Step by step guide on setting up a simple program and deploying to a Kubernetes environment.
 
+### Deleteing a docker image
+
+- `docker rmi <imageName> --force`
+
 # First step
 
 - Get the client, server, and worker folders ready from a previous repo
@@ -296,6 +300,41 @@ spec:
 
 12. run the command `kubectl get storageclass`
 13. Add Environmental Variables to Config
+14. ## Setting Up Ingress with Docker
+
+- excute the command noted [here](https://kubernetes.github.io/ingress-nginx/deploy/#docker-for-mac)
+  - yes it works for both mac and windows
+  - here it is as well if you dont want to open up a link
+    `kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.44.0/deploy/static/provider/cloud/deploy.yaml`
+  - After Verify the service was enabled by runnign the following
+    - `kubectl get pods -n ingress-nginx`
+
+15. create a new file called `ingress-service.yaml` use this template below
+
+```yaml
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx #tells kubernetes we want to create a ingress controller based on the nginx
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$1 # configures how our copy on nginx behaves
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /?(.*)
+            backend:
+              serviceName: client-cluster-ip-service
+              servicePort: 3000
+          - path: /api/?(.*)
+            backend:
+              serviceName: server-cluster-ip-service
+              servicePort: 5000
+```
+
+16. create a `.travis.yml` in the root of the directory
 
 ## when ready to check
 
@@ -351,7 +390,21 @@ THe differences between a Persistant
     allows outside users to access all the different pods that are running containers that they need
   - using a nginx ingress
   - use ingress-nginx here is the [github](https://github.com/kubernetes/ingress-nginx) use this one!!
-    not kubernetes-ingress the [github](https://github.com/nginxinc/kubernetes-ingress)
-    - is a seperate project that does the same thing led by the company
-      the setup of ingress-nginx changes depending on you environment(local, GC, AWS, Azure)
-      googlecloud is
+    not kubernetes-ingress the [github](https://github.com/nginxinc/kubernetes-ingress) - is a seperate project that does the same thing led by the company
+    the setup of ingress-nginx changes depending on you environment(local, GC, AWS, Azure)
+    Ingress routing rules to get traffic to services to a Controller for our Ingress
+  - Constantly works to make sure these routing rules are setup
+- the Ingress Config
+  - object that has a set of configuration rules describing how traffic should be routed
+- Ingress Controller
+  - watches for changes to the ingress and updates the "thing" that handles traffic
+
+---
+
+## Kubernetes Production Deployment
+
+1. create a Github
+2. Tie repo to Travis Ci
+3. Create a Google Cloud project
+4. Enable billing for the Project ! important for it to work (MAKE SURE TO DELETE AFTER!!)
+5. add deployment scripts to the repo

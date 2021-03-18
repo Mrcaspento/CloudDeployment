@@ -23,3 +23,13 @@ Try updating kubectl
 The status ImagePullBackOff means that a Pod couldn’t start because Kubernetes could not pull a container image. The ‘BackOff’ part indicates that Kubernetes will keep trying to pull the image, with an increasing back-off delay.
 
 you can you `kubectl describe deployment <deploymentName>` for more info
+
+## Remeber to rebuild a docker image!!
+
+- if running into a issue where the containers arent running in kubernetes
+- after making changes to any files you need to re-build the image and push to Docker Hub!!!
+
+- use `docker build -t <username>/<imageName> .`
+- then push it to dockerhub with `docker push <userName>/<imageName>`
+- Then run `kubectl delete -f k8s`
+- then `kubectl apply
