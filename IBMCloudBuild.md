@@ -18,6 +18,14 @@
    - Do not add additional services.
    - Do not add a DevOps toolchain, select manual deployment.
    - Choose "Deploy to Helm-based Kubernetes containers"
+6. after operations are complete, manually merge the deployment and cloud enablement files that are saved to the app directory
+   follow the next couple of steps or SKIP TO STEP**\*\*\*\***\*\***\*\*\*\***\*\***\*\*\*\***\*\***\*\*\*\***
+7. check if the app has been stored in the directory with `ls`
+8. Change into the directory
+9. run the command `ibmcloud dev build`
+10. then run the command `ibmcloud dev run`
+11. Check to see that is running by going to `localhost:3000` you should see something like this
+    ![deployed](./images/IBM_Cloud_deployed.PNG)
 
 - Enabling command parameters
 

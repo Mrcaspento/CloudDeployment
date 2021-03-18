@@ -11,8 +11,8 @@ A Step by step guide on setting up a simple program and deploying to a Kubernete
 # Manually & From Scratch building a simple app and deploying with kubernetes
 
 1. start by creating a K8s folder
-
-2. create a `client-deployment.yaml` file use this template as a guide
+2. build your images
+3. create a `client-deployment.yaml` file use this template as a guide
 
 ```yaml
 apiVersion: apps/v1 # selecting the api version we want to use, we want to us an object defined as v1 in app
