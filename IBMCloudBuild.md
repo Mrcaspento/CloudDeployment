@@ -27,6 +27,14 @@
 11. Check to see that is running by going to `localhost:3000` you should see something like this
     ![deployed](./images/IBM_Cloud_deployed.PNG)
 
+## Adding a serivice and modyfying the code
+
+1. run `ibmcloud dev edit` command in the cli
+2. follow the prompts to create and connect a new data-related service to you app, such as IBM Cloudant
+3. you can manually merge the configuration files that are saved to you appdirectory when you creat the service. Or you can skip this step for now.
+4. Update your code
+5. save any files that you modified
+
 - Enabling command parameters
 
   - config file `imbcloud dev enable --config-file <configFileName>`
