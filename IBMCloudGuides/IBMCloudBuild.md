@@ -53,6 +53,36 @@
 
 ---
 
+# Create a starter app
+
+1. `ibmcloud login`
+2. then, make sure you target a resource group, which is usually `Default` or `default`
+3. `ibmcloud target -g default`
+4. `'ibmcloud dev create`
+
+## Configure access to you kubernetes cluster
+
+1. Run the following command. It will download the configuration from IBM Cloud and also set the context for cluster: ##KUBE.id## to the kubeconfig file. This will make your kubectl client point to your Kubernetes cluster.
+
+- `ibmcloud ks cluster config --cluster <KUBE.id>`
+  - Your <Kube.id> should be next to your account name in ()
+
+2. To list the clusters you have access to, run
+
+- `ibmcloud ks cluster ls`
+
+3. To list the resource groups that you have access to, run
+
+- `ibmcloud resource groups`
+
+4. To target the resource the resource groups that you have access to, run
+
+- `ibmcloud resource groups`
+
+5. To target the resource group, run
+
+- `ibmcloud target -g <resource_group>`
+
 # Build the application with IBMCloud
 
 1. Ensure your local Docker engine is started
@@ -63,4 +93,67 @@
 
 - `export <variableName>=<AppYouGeneratedInPreviousStep>`
 
-3. change to the directory of the generated project
+3. Change to the directory of the generated project
+
+- `cd <variableName> && ls`
+
+4. Build the application.
+
+- `ibmcloud dev build --use-root-user-tools`
+
+5. Run the application
+
+- `ibmcloud dev run`
+  - Test it by opening another terminal and type `curl localhost:3000`
+
+6. Use `Ctrl+C` to end the execution and stop the app
+
+## Push the container Image to Registry
+
+1. Create an account on Docker Hub. Your Docker Id will become your public Reg namespace.
+2. Run the following to set your namespace:
+
+- `export MYNAMESPACE=<REGISTRY_NAMESPACE>`
+
+3. Build and tag the docker image by running the following command:
+
+- `docker build . -t ${MYNAMESPACE}/${MYPROJECT}:v1`
+
+4. Login to docker on the cli
+
+- `docker login`
+
+5. Push the docker image to the public registery on Docker Hub witht eh following
+
+- `docker push ${MYNAMESPACE}/${MYPROJECT}:v1`
+
+## Deploy the app with Helm
+
+1. Change to the chart directory:
+
+- `cd chart/$MYPROJECT`
+  - Helm uses the local "chart" files and creates the corresponding Kubernetes resources for you, such as the deployments and pods.
+
+2. Install the chart:
+
+- `helm install ${MYPROJECT} . --set image.repository=${MYNAMESPACE}/${MYPROJECT}`
+
+## View the application
+
+1. List the Kubernetes services in the namespace:
+
+- kubctl get services
+
+2. Locate the service linked to your application. It is named after your project. If your project name contains hyphens, they may have been removed by the chart, e.g my-project would become myproject.
+
+3. Make note of the the public port the service is listening on. The port is a 5-digit number(e.g., 31569) under PORT(S).
+
+4. Log back in to your ibmcloud account on the cli
+
+- `ibmcloud login`
+
+5. Identify a public IP of a worker node with the comman below:
+
+- ` ibmcloud ks workers --cluster ##KUBE.name##`
+
+6. Access the application at `http://worker-ip-address:portnumber/
