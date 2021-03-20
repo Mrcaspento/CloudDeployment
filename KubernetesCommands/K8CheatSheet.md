@@ -3,6 +3,7 @@
 ---
 
 Here is a Link to docs click [here](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#create)
+and another link [cheatsheet](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 
 ## kubectl context and configuration
 
