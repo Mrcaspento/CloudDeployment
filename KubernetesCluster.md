@@ -80,3 +80,18 @@
 5. The Slack channel is the channel name you provided while creating a webhook intergration above.
 6. Slack team name is the team-name( first part) of the team-name.slack.com e.g.. kube is the team name in the kube.slack.com
 7. Click Create Intergration. A new tile will be added to you toolchain
+8. From now on, whenever your toolchain excutes, you should see Slack Notifications in the channel you configured.
+
+## Step 7 Remove resources
+
+- In this step, you will clean up the resources to remove what you created above.
+
+1. Delete the Git repository.
+2. Click on the configuration for the BUILD stage
+3. Select the Input panel
+4. Copy the Git URL and paste into a browser
+5. In the git repository: select Settings on the right then General > Advanced > Remove Project
+6. Delete the toolchain.
+7. Delete the images from the Kubernetes Registry
+8. Delete the cluster.
+9. Delete the Slack channel.
