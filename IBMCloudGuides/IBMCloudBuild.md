@@ -65,7 +65,7 @@
 1. Run the following command. It will download the configuration from IBM Cloud and also set the context for cluster: ##KUBE.id## to the kubeconfig file. This will make your kubectl client point to your Kubernetes cluster.
 
 - `ibmcloud ks cluster config --cluster <KUBE.id>`
-  - Your <Kube.id> should be next to your account name in ()
+  - Your <Kube.id> if created a cluster through the cloud foundry website will be listed at step 2
 
 2. To list the clusters you have access to, run
 
@@ -76,10 +76,6 @@
 - `ibmcloud resource groups`
 
 4. To target the resource the resource groups that you have access to, run
-
-- `ibmcloud resource groups`
-
-5. To target the resource group, run
 
 - `ibmcloud target -g <resource_group>`
 
