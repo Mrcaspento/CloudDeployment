@@ -452,13 +452,3 @@ THe differences between a Persistant
 3. Create a Google Cloud project
 4. Enable billing for the Project ! important for it to work (MAKE SURE TO DELETE AFTER!!)
 5. add deployment scripts to the repo
-
-# js practice
-
-```javascript
-
-for(var i; i =0; i < cars.length; i ++){
-
-}
-
-```
