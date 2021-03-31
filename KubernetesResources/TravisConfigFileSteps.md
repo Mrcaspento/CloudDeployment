@@ -37,7 +37,7 @@
 
 ---
 
-# Work around without installing Ruby localyand installing teh Travis-cli to enycrpt a json file!
+# Work around without installing Ruby local and installing the Travis-cli to enycrpt a json file!
 
 1. Run `docker run -it -v $(pwd):/app ruby:2.4 sh`
 2. after docker pulls the image run `gem install travis`
