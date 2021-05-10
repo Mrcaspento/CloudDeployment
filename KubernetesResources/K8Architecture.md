@@ -4,3 +4,8 @@ The Kubernetes cluster consists of aset of nodes which may be physical or virtua
 on-cloud that host applications in the form of containers.
 
 - worker nodes: host applications as containers
+- master node: Manage, Plan, Schedule, Monitor nodes.
+
+## Etcd
+
+distributed reliable key-value store that is Simiple, Secure & Fast

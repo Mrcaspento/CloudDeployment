@@ -8,7 +8,7 @@ class App extends Component {
       <Router>
         <header>
           <Link to="/">Home</Link>
-          <Link to="/otherpage">Other Page</Link>
+          <Link to="/otherpage">pizza</Link>
         </header>
         <div>
           <Route exact path="/" component={Fib} />
